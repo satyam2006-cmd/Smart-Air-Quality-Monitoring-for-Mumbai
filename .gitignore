@@ -1,0 +1,27 @@
+# Unity editor generated files
+unity/Library/
+unity/Temp/
+unity/Obj/
+unity/Build/
+unity/Builds/
+unity/Logs/
+unity/UserSettings/
+unity/MemoryCaptures/
+unity/*.csproj
+unity/*.sln
+unity/*.slnx
+unity/.vs/
+
+# Python
+**/__pycache__/
+**/*.py[cod]
+backend/venv/
+backend/.venv/
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
