@@ -80,7 +80,7 @@ public bool showPollutionHeatmap = true;
 
     IEnumerator WaitAndSpawnStations()
     {
-        Debug.Log("Waiting for station and air quality API data...");
+        Debug.Log("Waiting for station registry data...");
 
         if (stationManager == null)
         {
@@ -103,11 +103,10 @@ public bool showPollutionHeatmap = true;
         float timeout = 60f;
         float elapsed = 0f;
 
-        while (
-            (!stationManager.IsLoaded ||
-             !airQualityManager.IsLoaded) &&
-            !airQualityManager.HasFailed &&
-            elapsed < timeout)
+        // Station coordinates are sufficient to create visible map markers.
+        // Live readings may fail independently (for example, if OpenAQ is
+        // unavailable or its API key is missing), so do not block the map on it.
+        while (!stationManager.IsLoaded && elapsed < timeout)
         {
             elapsed += Time.deltaTime;
             yield return null;
@@ -119,19 +118,15 @@ public bool showPollutionHeatmap = true;
             yield break;
         }
 
-        if (airQualityManager.HasFailed ||
-            !airQualityManager.IsLoaded)
-        {
-            Debug.LogError("Air Quality API failed to load!");
-            yield break;
-        }
-
         if (stationManager.stations == null ||
             stationManager.stations.Length == 0)
         {
             Debug.LogError("No station records available!");
             yield break;
         }
+
+        if (!airQualityManager.IsLoaded)
+            Debug.LogWarning("Live readings are not available yet. Spawning station markers without readings; they will update after a successful refresh.");
 
         SpawnStations();
     }
